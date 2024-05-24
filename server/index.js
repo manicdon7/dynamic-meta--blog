@@ -1,19 +1,15 @@
 const express = require('express');
-const { getPostById, getAllPosts } = require('./posts');
+const { getPostById } = require('./posts');
 const cors = require('cors');
 const path = require('path');
-const prerender = require('prerender-node');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors("https://dynamic-meta-blog-client.vercel.app/"));
 
-// Configure Prerender.io middleware
-app.use(prerender.set('prerenderToken', 'RbvwzJQyLxadqmgvHGpg'));
-
 // Serve static files from the build directory
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname,'..','client', 'build')));
 
 // Middleware to handle accessibility events
 app.use((req, res, next) => {
@@ -24,12 +20,12 @@ app.use((req, res, next) => {
 // Endpoint to fetch all posts
 app.get('/api/posts', (req, res) => {
     console.log('Fetching all posts');
-    const posts = getAllPosts();
+    const posts = getPostById();
     res.json(posts);
 });
 
-// Endpoint to fetch a specific post by ID
-app.get('/api/post/:id', (req, res) => {
+// Endpoint to fetch a specific post by ID and serve HTML with updated meta tags
+app.get('/post/:id', (req, res) => {
     const postId = req.params.id;
     console.log('Requested post ID:', postId);
 
@@ -40,15 +36,47 @@ app.get('/api/post/:id', (req, res) => {
         return res.status(404).send('Post not found');
     }
 
-    res.json(post);
+    // Generate the HTML content with the post data for meta tags
+    const updatedHtmlData = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="description" content="Web site created using create-react-app" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+        <!-- Open Graph meta tags -->
+        <meta property="og:title" content="${post.title}" />
+        <meta property="og:description" content="${post.description}" />
+        <meta property="og:image" content="${post.image}" />
+        <!-- Twitter Card meta tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="${post.title}" />
+        <meta name="twitter:description" content="${post.description}" />
+        <meta name="twitter:image" content="${post.image}" />
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <title>${post.title}</title>
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root"></div>
+        <script src="/static/js/bundle.js"></script>
+        <script src="/static/js/0.chunk.js"></script>
+        <script src="/static/js/main.chunk.js"></script>
+    </body>
+    </html>
+    `;
+
+    res.send(updatedHtmlData);
 });
 
 // Serve the main HTML file for all non-API routes
 app.get('*', (req, res) => {
-    const htmlFilePath = path.join(__dirname, 'build', 'index.html');
+    const htmlFilePath = path.join(__dirname,'..', 'client', 'build', 'index.html');
     res.sendFile(htmlFilePath);
 });
-
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
