@@ -6,7 +6,7 @@ const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.use(cors({origin: "https://dynamic-meta-blog-client.vercel.app/"}));
+app.use(cors({origin:"https://dynamic-meta-blog-client.vercel.app/"}));
 
 // Serve static files from the build directory
 app.use(express.static(path.join(__dirname, '..', 'build')));

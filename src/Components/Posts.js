@@ -4,7 +4,8 @@ import { useParams } from 'react-router-dom';
 function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
-  const urlvar= "https://dynamic-meta-blog.vercel.app/"
+  const urlvar = "https://dynamic-meta-blog.vercel.app/";
+
   useEffect(() => {
     fetch(`${urlvar}api/post/${id}`)
       .then(response => response.text())
@@ -15,12 +16,30 @@ function Post() {
         const ogDescriptionMeta = doc.querySelector('meta[property="og:description"]');
         const ogImageMeta = doc.querySelector('meta[property="og:image"]');
         
-        if (ogTitleMeta && ogDescriptionMeta && ogImageMeta) {
+        const twitterTitleMeta = doc.querySelector('meta[name="twitter:title"]');
+        const twitterDescriptionMeta = doc.querySelector('meta[name="twitter:description"]');
+        const twitterImageMeta = doc.querySelector('meta[name="twitter:image"]');
+        
+        if (ogTitleMeta && ogDescriptionMeta && ogImageMeta && twitterTitleMeta && twitterDescriptionMeta && twitterImageMeta) {
           setPost({
             title: ogTitleMeta.content,
             description: ogDescriptionMeta.content,
             image: ogImageMeta.content
           });
+
+          // Update document title
+          document.title = ogTitleMeta.content;
+
+          // Update Open Graph meta tags
+          document.querySelector('meta[property="og:title"]').setAttribute('content', ogTitleMeta.content);
+          document.querySelector('meta[property="og:description"]').setAttribute('content', ogDescriptionMeta.content);
+          document.querySelector('meta[property="og:image"]').setAttribute('content', ogImageMeta.content);
+          
+          // Update Twitter Card meta tags
+          document.querySelector('meta[name="twitter:title"]').setAttribute('content', twitterTitleMeta.content);
+          document.querySelector('meta[name="twitter:description"]').setAttribute('content', twitterDescriptionMeta.content);
+          document.querySelector('meta[name="twitter:image"]').setAttribute('content', twitterImageMeta.content);
+          console.log("meta changed")
         } else {
           console.error('Meta tags not found in HTML response');
         }
