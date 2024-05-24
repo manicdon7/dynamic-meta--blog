@@ -6,7 +6,7 @@ function Post() {
   const [post, setPost] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/post/${id}`)
+    fetch(`https://dynamic-meta-blog.vercel.app/api/post/${id}`)
       .then(response => response.text())
       .then(html => {
         const parser = new DOMParser();
