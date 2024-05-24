@@ -1,7 +1,9 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { getPostById } = require('./posts');
+const { getPostById } = require('./posts')
+
+;
 const cors = require('cors');
 
 const app = express();
