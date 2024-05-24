@@ -10,14 +10,11 @@ function Post() {
     fetch(`${urlvar}api/post/${id}`)
       .then(response => response.text())
       .then(html => {
-        // Log the received HTML for reference
         console.log(html);
 
-        // Create a new HTML element and set its innerHTML to the received HTML
         const tempElement = document.createElement('div');
         tempElement.innerHTML = html;
 
-        // Extract meta tags from the received HTML
         const ogTitleMeta = tempElement.querySelector('meta[property="og:title"]');
         const ogDescriptionMeta = tempElement.querySelector('meta[property="og:description"]');
         const ogImageMeta = tempElement.querySelector('meta[property="og:image"]');
@@ -45,7 +42,7 @@ function Post() {
           document.querySelector('meta[name="twitter:title"]').setAttribute('content', twitterTitleMeta.content);
           document.querySelector('meta[name="twitter:description"]').setAttribute('content', twitterDescriptionMeta.content);
           document.querySelector('meta[name="twitter:image"]').setAttribute('content', twitterImageMeta.content);
-          console.log("meta changed")
+          console.log("Meta tags updated");
         } else {
           console.error('Meta tags not found in HTML response');
         }

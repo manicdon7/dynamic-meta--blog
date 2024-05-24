@@ -5,30 +5,22 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
-app.use(cors({origin:"https://dynamic-meta-blog.vercel.app/"}));
-
-// Serve static files from the build directory
+app.use(cors("https://dynamic-meta-blog.vercel.app/"));
 app.use(express.static('build'));
-
-// Middleware to handle accessibility events
 app.use((req, res, next) => {
     console.log('Accessibility event detected:', req.method, req.url);
-    // You can perform additional actions here if needed
     next();
 });
 
-// Endpoint to fetch all posts
 app.get('/api/posts', (req, res) => {
     console.log('Fetching all posts');
-    res.json(getPostById()); // Assuming getPostById returns all posts if called without arguments
+    res.json(getPostById());
 });
 
-// Endpoint to fetch a specific post by ID and update the HTML content
 app.get('/api/post/:id', (req, res) => {
     const postId = req.params.id;
     console.log('Requested post ID:', postId);
 
-    // Assuming getPostById function returns the post data
     const post = getPostById(postId);
     console.log('Retrieved post:', post);
 
@@ -36,7 +28,6 @@ app.get('/api/post/:id', (req, res) => {
         return res.status(404).send('Post not found');
     }
 
-    // Generate the updated HTML content with the post data
     const updatedHtmlData = `
     <!DOCTYPE html>
     <html lang="en">
