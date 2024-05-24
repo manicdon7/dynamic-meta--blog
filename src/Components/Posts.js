@@ -10,15 +10,21 @@ function Post() {
     fetch(`${urlvar}api/post/${id}`)
       .then(response => response.text())
       .then(html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const ogTitleMeta = doc.querySelector('meta[property="og:title"]');
-        const ogDescriptionMeta = doc.querySelector('meta[property="og:description"]');
-        const ogImageMeta = doc.querySelector('meta[property="og:image"]');
+        // Log the received HTML for reference
+        console.log(html);
+
+        // Create a new HTML element and set its innerHTML to the received HTML
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = html;
+
+        // Extract meta tags from the received HTML
+        const ogTitleMeta = tempElement.querySelector('meta[property="og:title"]');
+        const ogDescriptionMeta = tempElement.querySelector('meta[property="og:description"]');
+        const ogImageMeta = tempElement.querySelector('meta[property="og:image"]');
         
-        const twitterTitleMeta = doc.querySelector('meta[name="twitter:title"]');
-        const twitterDescriptionMeta = doc.querySelector('meta[name="twitter:description"]');
-        const twitterImageMeta = doc.querySelector('meta[name="twitter:image"]');
+        const twitterTitleMeta = tempElement.querySelector('meta[name="twitter:title"]');
+        const twitterDescriptionMeta = tempElement.querySelector('meta[name="twitter:description"]');
+        const twitterImageMeta = tempElement.querySelector('meta[name="twitter:image"]');
         
         if (ogTitleMeta && ogDescriptionMeta && ogImageMeta && twitterTitleMeta && twitterDescriptionMeta && twitterImageMeta) {
           setPost({
