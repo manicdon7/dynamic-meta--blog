@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors("https://dynamic-meta-blog-client.vercel.app/"));
 
 // Serve static files from the build directory
-app.use(express.static(path.join(__dirname,'..','client', 'build')));
+app.use(express.static(path.join(__dirname,'..', 'build')));
 
 // Middleware to handle accessibility events
 app.use((req, res, next) => {
@@ -25,7 +25,7 @@ app.get('/api/posts', (req, res) => {
 });
 
 // Endpoint to fetch a specific post by ID and serve HTML with updated meta tags
-app.get('/post/:id', (req, res) => {
+app.get('/api/post/:id', (req, res) => {
     const postId = req.params.id;
     console.log('Requested post ID:', postId);
 
@@ -42,11 +42,11 @@ app.get('/post/:id', (req, res) => {
     <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Web site created using create-react-app" />
-        <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+        <link rel="apple-touch-icon" href="/logo192.png" />
         <!-- Open Graph meta tags -->
         <meta property="og:title" content="${post.title}" />
         <meta property="og:description" content="${post.description}" />
@@ -56,15 +56,14 @@ app.get('/post/:id', (req, res) => {
         <meta name="twitter:title" content="${post.title}" />
         <meta name="twitter:description" content="${post.description}" />
         <meta name="twitter:image" content="${post.image}" />
-        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <link rel="manifest" href="/manifest.json" />
         <title>${post.title}</title>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
-        <script src="/static/js/bundle.js"></script>
-        <script src="/static/js/0.chunk.js"></script>
-        <script src="/static/js/main.chunk.js"></script>
+        <script defer="defer" src="/static/js/main.232429fd.js"></script>
+        <link href="/static/css/main.77440057.css" rel="stylesheet">
     </body>
     </html>
     `;
@@ -74,7 +73,7 @@ app.get('/post/:id', (req, res) => {
 
 // Serve the main HTML file for all non-API routes
 app.get('*', (req, res) => {
-    const htmlFilePath = path.join(__dirname,'..', 'client', 'build', 'index.html');
+    const htmlFilePath = path.join(__dirname,'..', 'build', 'index.html');
     res.sendFile(htmlFilePath);
 });
 // Start the server

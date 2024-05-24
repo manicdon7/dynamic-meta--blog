@@ -8,33 +8,40 @@ function Post() {
 
   useEffect(() => {
     fetch(`${urlvar}api/post/${id}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data) {
-          setPost(data);
+      .then(response => response.text())
+      .then(html => {
+        console.log(html);
 
-          // Update meta tags for social media preview
-          document.title = data.title;
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = html;
 
-          const ogTitleMeta = document.querySelector('meta[property="og:title"]');
-          const ogDescriptionMeta = document.querySelector('meta[property="og:description"]');
-          const ogImageMeta = document.querySelector('meta[property="og:image"]');
+        const ogTitleMeta = tempElement.querySelector('meta[property="og:title"]');
+        const ogDescriptionMeta = tempElement.querySelector('meta[property="og:description"]');
+        const ogImageMeta = tempElement.querySelector('meta[property="og:image"]');
+        
+        const twitterTitleMeta = tempElement.querySelector('meta[name="twitter:title"]');
+        const twitterDescriptionMeta = tempElement.querySelector('meta[name="twitter:description"]');
+        const twitterImageMeta = tempElement.querySelector('meta[name="twitter:image"]');
+        
+        if (ogTitleMeta && ogDescriptionMeta && ogImageMeta && twitterTitleMeta && twitterDescriptionMeta && twitterImageMeta) {
+          setPost({
+            title: ogTitleMeta.content,
+            description: ogDescriptionMeta.content,
+            image: ogImageMeta.content
+          });
 
-          const twitterTitleMeta = document.querySelector('meta[name="twitter:title"]');
-          const twitterDescriptionMeta = document.querySelector('meta[name="twitter:description"]');
-          const twitterImageMeta = document.querySelector('meta[name="twitter:image"]');
+          document.title = ogTitleMeta.content;
 
-          if (ogTitleMeta) ogTitleMeta.setAttribute('content', data.title);
-          if (ogDescriptionMeta) ogDescriptionMeta.setAttribute('content', data.description);
-          if (ogImageMeta) ogImageMeta.setAttribute('content', data.image);
+          document.querySelector('meta[property="og:title"]').setAttribute('content', ogTitleMeta.content);
+          document.querySelector('meta[property="og:description"]').setAttribute('content', ogDescriptionMeta.content);
+          document.querySelector('meta[property="og:image"]').setAttribute('content', ogImageMeta.content);
 
-          if (twitterTitleMeta) twitterTitleMeta.setAttribute('content', data.title);
-          if (twitterDescriptionMeta) twitterDescriptionMeta.setAttribute('content', data.description);
-          if (twitterImageMeta) twitterImageMeta.setAttribute('content', data.image);
-
+          document.querySelector('meta[name="twitter:title"]').setAttribute('content', twitterTitleMeta.content);
+          document.querySelector('meta[name="twitter:description"]').setAttribute('content', twitterDescriptionMeta.content);
+          document.querySelector('meta[name="twitter:image"]').setAttribute('content', twitterImageMeta.content);
           console.log("Meta tags updated");
         } else {
-          console.error('Post data not found');
+          console.error('Meta tags not found in HTML response');
         }
       })
       .catch(error => console.error('Error fetching post:', error));
