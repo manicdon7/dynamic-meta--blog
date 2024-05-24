@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
-  const urlvar= "http://localhost:5000/"
+  const urlvar= "https://dynamic-meta-blog.vercel.app/"
   useEffect(() => {
     fetch(`${urlvar}api/post/${id}`)
       .then(response => response.text())
