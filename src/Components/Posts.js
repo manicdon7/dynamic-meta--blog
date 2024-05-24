@@ -4,21 +4,18 @@ import { useParams } from 'react-router-dom';
 function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
-  const urlvar = "https://dynamic-meta-blog.vercel.app/";
+  const urlvar = "http://localhost:5000/";
 
   useEffect(() => {
     fetch(`${urlvar}api/post/${id}`)
       .then(response => response.text())
       .then(html => {
-        console.log(html);
-
         const tempElement = document.createElement('div');
         tempElement.innerHTML = html;
 
         const ogTitleMeta = tempElement.querySelector('meta[property="og:title"]');
         const ogDescriptionMeta = tempElement.querySelector('meta[property="og:description"]');
         const ogImageMeta = tempElement.querySelector('meta[property="og:image"]');
-        
         const twitterTitleMeta = tempElement.querySelector('meta[name="twitter:title"]');
         const twitterDescriptionMeta = tempElement.querySelector('meta[name="twitter:description"]');
         const twitterImageMeta = tempElement.querySelector('meta[name="twitter:image"]');
@@ -35,11 +32,9 @@ function Post() {
           document.querySelector('meta[property="og:title"]').setAttribute('content', ogTitleMeta.content);
           document.querySelector('meta[property="og:description"]').setAttribute('content', ogDescriptionMeta.content);
           document.querySelector('meta[property="og:image"]').setAttribute('content', ogImageMeta.content);
-
           document.querySelector('meta[name="twitter:title"]').setAttribute('content', twitterTitleMeta.content);
           document.querySelector('meta[name="twitter:description"]').setAttribute('content', twitterDescriptionMeta.content);
           document.querySelector('meta[name="twitter:image"]').setAttribute('content', twitterImageMeta.content);
-          console.log("Meta tags updated");
         } else {
           console.error('Meta tags not found in HTML response');
         }
