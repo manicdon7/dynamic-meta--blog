@@ -2,11 +2,15 @@ const express = require('express');
 const { getPostById, getAllPosts } = require('./posts');
 const cors = require('cors');
 const path = require('path');
+const prerender = require('prerender-node');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors("https://dynamic-meta-blog-client.vercel.app/"));
+
+// Configure Prerender.io middleware
+app.use(prerender.set('prerenderToken', 'RbvwzJQyLxadqmgvHGpg'));
 
 // Serve static files from the build directory
 app.use(express.static(path.join(__dirname, 'build')));

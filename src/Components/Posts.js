@@ -31,7 +31,7 @@ function Post() {
           if (twitterTitleMeta) twitterTitleMeta.setAttribute('content', data.title);
           if (twitterDescriptionMeta) twitterDescriptionMeta.setAttribute('content', data.description);
           if (twitterImageMeta) twitterImageMeta.setAttribute('content', data.image);
-          
+
           console.log("Meta tags updated");
         } else {
           console.error('Post data not found');
