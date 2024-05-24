@@ -9,7 +9,7 @@ const Home = () => {
 
   // Fetch all posts
   const fetchPosts = () => {
-    fetch('http://localhost:5000/api/posts')
+    fetch('https://dynamic-meta-blog.vercel.app/api/posts')
       .then(response => response.json())
       .then(data => setPosts(data))
       .catch(error => console.error('Error fetching posts:', error));
@@ -17,7 +17,7 @@ const Home = () => {
 
   // Fetch a specific post by ID
   const fetchPost = (postId) => {
-    fetch(`http://localhost:5000/api/post/${postId}`)
+    fetch(`https://dynamic-meta-blog.vercel.app/api/post/${postId}`)
       .then(response => response.json())
       .then(data => setPost(data))
       .catch(error => console.error('Error fetching post:', error));
